@@ -67,9 +67,11 @@ function gameboard(size) {
           ships[index][1] += 1;
         }
       }
+      return true;
     }
   };
 
+  //will return true if all the ships are sunk *OR* if there are no ships
   const allSunk = function () {
     for (let [boat, hit] of ships) {
       if (!boat.isSunk()) {
