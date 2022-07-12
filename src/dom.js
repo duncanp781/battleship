@@ -6,6 +6,7 @@ function dom() {
       for (let j = 0; j < board.size; j++) {
         const square = document.createElement("div");
         square.className = `square r${i} c${j}`;
+        square.addEventListener('click', (e) => _handle_clicks(e,player));
         container.appendChild(square);
       }
     }
@@ -19,9 +20,16 @@ function dom() {
     if (info == undefined) {
       square.textContent = "";
     } else if (info == "miss") {
-      square.textContent = "O";
+      square.textContent = "miss";
     } else {
-      square.textContent = "S";
+      console.log(info);
+      const ship = info[0];
+      const isHurt = ship.hitMap[info[1]];
+      if(isHurt){
+        square.textContent = 'X';
+      }else{
+        square.textContent = 'S';
+      }
     }
   };
 
@@ -33,6 +41,20 @@ function dom() {
       }
     }
   };
+
+  const _handle_clicks = function(e, player) {
+    let info = e.target.className;
+    //This turns the classname into an array of the numbers
+    info = info
+      .split('')
+      .filter((entry) => /\d/.test(entry))
+      .map((entry) => parseInt(entry.replace(/\D/g, '')));
+      
+    
+    player.board.receiveAttack(info);
+    display_square(info, player.board, player.name);
+
+  }
   
   return {
     create_board,

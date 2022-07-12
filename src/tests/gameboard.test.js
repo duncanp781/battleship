@@ -21,7 +21,7 @@ test("works with longer ship", () => {
   expect(game.allSunk()).toBe(false);
 
   game.receiveAttack([0, 0]);
-  expect(game.ships).toStrictEqual([[firstship, 1]]);
+  expect(game.ships).toStrictEqual([firstship]);
 
   game.receiveAttack([0, 1]);
   expect(game.allSunk()).toBe(true);

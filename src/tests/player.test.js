@@ -9,7 +9,7 @@ test('Can fill board', () => {
   expect(p1.random_move(p2.board)).toBe(false);
 })
 
-test.only('Will win', () => {
+test('Will win', () => {
   const p1 = player('Dunc', 1, true);
   const p2 = player('Daniel', 1, false);
   const boat = ship(1)

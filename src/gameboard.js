@@ -1,4 +1,4 @@
-import { ship } from "./ship";
+
 
 function gameboard(size) {
   //So that the internal arrays arent references of each other
@@ -22,9 +22,9 @@ function gameboard(size) {
     }
     //Place ship
     for (let i = coords[1]; i < coords[1] + ship.length; i++) {
-      gameboard[coords[0]][i] = ship;
+      gameboard[coords[0]][i] = [ship,i - coords[1]];
     }
-    ships.push([ship, 0]);
+    ships.push(ship);
     return true;
   };
 
@@ -43,9 +43,9 @@ function gameboard(size) {
     }
     //Place ship
     for (let i = coords[0]; i < coords[0] + ship.length; i++) {
-      gameboard[i][coords[1]] = ship;
+      gameboard[i][coords[1]] = [ship, i -coords[0]];
     }
-    ships.push([ship, 0]);
+    ships.push(ship);
     return true;
   };
 
@@ -58,23 +58,27 @@ function gameboard(size) {
       return false;
     } else {
       //The target is a ship
-      if (target.isSunk()) {
+      let [ship, ind] = target;
+      if (ship.isSunk()) {
         return false;
+      }else{
+        ship.hit(ind);
+        return true;
       }
-      let index;
-      for (index = 0; index < ships.length; index++) {
-        if (ships[index][0] == target) {
-          ships[index][0].hit(ships[index][1]);
-          ships[index][1] += 1;
-        }
-      }
-      return true;
+      // let index;
+      // for (index = 0; index < ships.length; index++) {
+      //   if (ships[index][0] == target) {
+      //     ships[index][0].hit(ships[index][1]);
+      //     ships[index][1] += 1;
+      //   }
+      // }
+      
     }
   };
 
   //will return true if all the ships are sunk *OR* if there are no ships
   const allSunk = function () {
-    for (let [boat, hit] of ships) {
+    for (let boat of ships) {
       if (!boat.isSunk()) {
         return false;
       }
