@@ -41,6 +41,7 @@ function player(name, size, first) {
     return false;
   }
   return {
+    name,
     hasTurn,
     board,
     move,

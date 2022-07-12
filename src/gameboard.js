@@ -1,10 +1,11 @@
 import { ship } from "./ship";
 
 function gameboard(size) {
-  let gameboard = new Array(size);
+  //So that the internal arrays arent references of each other
+  let gameboard = new Array(size).fill(0).map(() => new Array(size));
   //ships are [ship, # of times hit] arrays
   let ships = [];
-  gameboard.fill(new Array(size));
+ 
 
   //coords are [y,x]
   //Places going to the right
