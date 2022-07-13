@@ -14,4 +14,26 @@
 
 .gamecontainer{
   display: flex;
+  justify-content: center;
+}
+
+.turn{
+  display: flex;
+  justify-content: center;
+}
+
+.square[display = 'sea']{
+  background-color: blue;
+}
+
+.square[display = 'miss']{
+  background-color: yellow;
+}
+
+.square[display = 'hit']{
+  background-color: red;
+}
+
+.square[display = 'ship']{
+  background-color: green;
 }

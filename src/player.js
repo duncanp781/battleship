@@ -6,7 +6,6 @@ function player(name, size, first) {
   function move(coords, board) {
       let res = board.receiveAttack(coords);
       return res;
-
   }
 
   function random_move(board) {

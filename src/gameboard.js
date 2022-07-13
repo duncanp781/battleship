@@ -1,11 +1,8 @@
-
-
 function gameboard(size) {
   //So that the internal arrays arent references of each other
   let gameboard = new Array(size).fill(0).map(() => new Array(size));
   //ships are [ship, # of times hit] arrays
   let ships = [];
- 
 
   //coords are [y,x]
   //Places going to the right
@@ -22,7 +19,7 @@ function gameboard(size) {
     }
     //Place ship
     for (let i = coords[1]; i < coords[1] + ship.length; i++) {
-      gameboard[coords[0]][i] = [ship,i - coords[1]];
+      gameboard[coords[0]][i] = [ship, i - coords[1]];
     }
     ships.push(ship);
     return true;
@@ -43,7 +40,7 @@ function gameboard(size) {
     }
     //Place ship
     for (let i = coords[0]; i < coords[0] + ship.length; i++) {
-      gameboard[i][coords[1]] = [ship, i -coords[0]];
+      gameboard[i][coords[1]] = [ship, i - coords[0]];
     }
     ships.push(ship);
     return true;
@@ -61,19 +58,18 @@ function gameboard(size) {
       let [ship, ind] = target;
       if (ship.isSunk()) {
         return false;
-      }else{
+      } else {
         ship.hit(ind);
         return true;
       }
-      // let index;
-      // for (index = 0; index < ships.length; index++) {
-      //   if (ships[index][0] == target) {
-      //     ships[index][0].hit(ships[index][1]);
-      //     ships[index][1] += 1;
-      //   }
-      // }
-      
     }
+  };
+  const canReceiveAttack = function (coords) {
+    let target = gameboard[coords[0]][coords[1]];
+    if (target == "miss") {
+      return false;
+    }
+    return true;
   };
 
   //will return true if all the ships are sunk *OR* if there are no ships
@@ -94,6 +90,7 @@ function gameboard(size) {
     place_vert,
     receiveAttack,
     allSunk,
+    canReceiveAttack,
   };
 }
 
