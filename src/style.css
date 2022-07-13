@@ -11,3 +11,7 @@
   grid-template-rows: repeat(8,1fr);
   padding: 24px;
 }
+
+.gamecontainer{
+  display: flex;
+}

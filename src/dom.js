@@ -1,3 +1,5 @@
+import { game} from ".";
+
 function dom() {
   const create_board = function (player) {
     const board = player.board;
@@ -22,7 +24,6 @@ function dom() {
     } else if (info == "miss") {
       square.textContent = "miss";
     } else {
-      console.log(info);
       const ship = info[0];
       const isHurt = ship.hitMap[info[1]];
       if(isHurt){
@@ -42,17 +43,26 @@ function dom() {
     }
   };
 
+  const display_turn = function(onesTurn){
+    const turn = document.querySelector('.turn');
+
+    let info = onesTurn ? 'Your turn': "Computer's turn";
+    turn.textContent = info;
+  }
+
+
+  
+
   const _handle_clicks = function(e, player) {
     let info = e.target.className;
     //This turns the classname into an array of the numbers
-    info = info
+    let coords = info
       .split('')
       .filter((entry) => /\d/.test(entry))
       .map((entry) => parseInt(entry.replace(/\D/g, '')));
-      
     
-    player.board.receiveAttack(info);
-    display_square(info, player.board, player.name);
+    game.receiveAttack(coords,player);
+    display_square(coords, player.board, player.name);
 
   }
   
@@ -60,6 +70,7 @@ function dom() {
     create_board,
     display_square,
     display_board,
+    display_turn,
   };
 }
 
