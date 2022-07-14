@@ -69,12 +69,10 @@ function gameboard(size) {
       }
     }
   };
+
   const canReceiveAttack = function (coords) {
     let target = gameboard[coords[0]][coords[1]];
-    if (target == "miss") {
-      return false;
-    }
-    return true;
+    return (target != "miss"); 
   };
 
   //will return true if all the ships are sunk *OR* if there are no ships

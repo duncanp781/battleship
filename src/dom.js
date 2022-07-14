@@ -8,7 +8,7 @@ function dom() {
       for (let j = 0; j < board.size; j++) {
         const square = document.createElement("div");
         square.className = `square r${i} c${j}`;
-        if(player.name == 'B'){
+        if (player == game.p2) {
           square.addEventListener("click", (e) => _handle_clicks(e));
         }
         container.appendChild(square);
@@ -17,6 +17,7 @@ function dom() {
     container.className = `board ${player.name}`;
     return container;
   };
+
   const display_square = function (coords, player) {
     const toDisplay = player.board.gameboard;
     const square = document.querySelector(
@@ -51,13 +52,6 @@ function dom() {
     }
   };
 
-  const display_turn = function () {
-    const turn = document.querySelector(".turn");
-
-    let info = game.onesTurn ? "Your turn" : "Computer's turn";
-    turn.textContent = info;
-  };
-
   const _handle_clicks = function (e) {
     let info = e.target.className;
     //This turns the classname into an array of the numbers
@@ -65,20 +59,13 @@ function dom() {
       .split("")
       .filter((entry) => /\d/.test(entry))
       .map((entry) => parseInt(entry.replace(/\D/g, "")));
-
-    if(game.receiveAttack(coords, game.p2)){
-      display_square(coords, game.p2);
-      let next = game.ai_attack(game.p1);
-      display_square(next, game.p1);
-    }
-    
-  }; 
+    game.do_player_turn(coords);
+  };
 
   return {
     create_board,
     display_square,
     display_board,
-    display_turn,
   };
 }
 

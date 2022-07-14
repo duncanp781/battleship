@@ -5,38 +5,48 @@ import { ship } from "./ship";
 import "./style.css";
 
 export const game = (() => {
-  const p1 = player("A", 8, true);
-  const p2 = player("B", 8, true);
+  const p1 = player("A", 8);
+  const p2 = player("B", 8);
   const display_manager = dom();
   let onesTurn = true;
   let gameDone = false;
 
-  
+  function prompt_place_ship(length) {
+    while (true) {
+      let answer = prompt(
+        `Where would you like to place your ship of length ${length}? Format is "row, column", eg. "3,2"`
+      );
 
-  function prompt_place_ship(length){
-    while(true){
-      let answer = prompt(`Where would you like to place your ship of length ${length}? Format is "row, column", eg. "3,2"`);
-  
-      let coords = answer.split(',').map(entry => parseInt(entry));
+      let coords = answer.split(",").map((entry) => parseInt(entry));
       const toPlace = ship(length);
-      if(p1.board.place_horiz(coords, toPlace)){
+      if (p1.board.place_horiz(coords, toPlace)) {
         break;
-      }else{
-        alert('Those are not valid coordinates');
+      } else {
+        alert("Those are not valid coordinates");
       }
     }
-    game.display_manager.display_board(game.p1);
-    game.display_manager.display_board(game.p2);
+    display_manager.display_board(p1);
   }
 
-  function place_ship_random(length){
+  function place_ship_random(length) {
     const toPlace = ship(length);
-    while(true){
+    while (true) {
       let rand1 = Math.floor(Math.random() * p2.board.size);
       let rand2 = Math.floor(Math.random() * p2.board.size);
-      if(p2.board.place_horiz([rand1,rand2], toPlace)){
+      if (p2.board.place_horiz([rand1, rand2], toPlace)) {
+        display_manager.display_board(p2);
         break;
       }
+    }
+  }
+
+  function do_player_turn(coords) {
+    if (receiveAttack(coords, p2)) {
+      //The player attacked, display it
+      display_manager.display_square(coords, p2);
+      //Now do the AI's turn
+      let next = ai_attack(p1);
+      display_manager.display_square(next, p1);
     }
   }
 
@@ -44,35 +54,17 @@ export const game = (() => {
     if (gameDone) {
       return false;
     }
-    let valid_move;
-    switch (player) {
-      case p1:
-        valid_move = !onesTurn;
-        break;
-      case p2:
-        valid_move = onesTurn;
-        break;
-    }
+    let valid_move = player == p1 ? !onesTurn : onesTurn;
 
     if (!valid_move) {
-      console.log("Not your turn");
       return false;
     }
 
     if (player.board.receiveAttack(coords)) {
       onesTurn = !onesTurn;
-      display_manager.display_turn(onesTurn);
-
       if (player.board.allSunk()) {
         const turn = document.querySelector(".turn");
-        switch (player) {
-          case p1:
-            turn.textContent = "You lose!";
-            break;
-          case p2:
-            turn.textContent = "You win!";
-            break;
-        }
+        turn.textContent = (player == p1) ? "You lose!" : "You win!";
         gameDone = true;
       }
       return true;
@@ -90,21 +82,12 @@ export const game = (() => {
         receiveAttack(coords, player);
         return coords;
       }
-    }function place_ship_random(length){
-      const toPlace = ship(length);
-      while(true){
-        let rand1 = Math.floor(Math.random() * board.size);
-        let rand2 = Math.floor(Math.random() * board.size);
-        if(game.p2.board.place_horiz([rand1,rand2], toPlace)){
-          break;
-        }
-      }
     }
     //Go through linearly
     for (let i = 0; i < board.size; i++) {
       for (let j = 0; j < board.size; j++) {
         let coords = [i, j];
-        if (board.receiveAttack([i, j])) {
+        if (board.canReceiveAttack(coords)) {
           receiveAttack(coords, player);
           return coords;
         }
@@ -124,55 +107,30 @@ export const game = (() => {
     ai_attack,
     prompt_place_ship,
     place_ship_random,
+    do_player_turn,
   };
 })();
 
-
-function initialize_game(){
+function initialize_game() {
   const container = document.querySelector(".gamecontainer");
   container.appendChild(game.display_manager.create_board(game.p1));
   container.appendChild(game.display_manager.create_board(game.p2));
 
   game.display_manager.display_board(game.p1);
   game.display_manager.display_board(game.p2);
- 
 
-  place_ships_random();
-  place_ships();
+  place_ships(game.prompt_place_ship);
+  place_ships(game.place_ship_random);
 
-  game.display_manager.display_board(game.p1);
-  game.display_manager.display_board(game.p2);
-}
-
-function place_ships(){
-  game.prompt_place_ship(3);
-  game.prompt_place_ship(4);
-  game.prompt_place_ship(2);
-  game.prompt_place_ship(2);
-}
-
-function place_ships_random(){
-  game.place_ship_random(3);
-  game.place_ship_random(4);
-  game.place_ship_random(2);
-  game.place_ship_random(2);
-
-}
-
-//Just a random ship layout to have by default
-function default_ships(b) {
-
-
-  const b1 = ship(2);
-  const b2 = ship(3);
-
-  b.place_horiz([0, 0], b1);
-  b.place_vert([0, 4], b2);
+  function place_ships(place_method) {
+    place_method(3);
+    // place_method(4);
+    // place_method(2);
+    // place_method(2);
+  }
 
   game.display_manager.display_board(game.p1);
   game.display_manager.display_board(game.p2);
 }
 
 initialize_game();
-
-
