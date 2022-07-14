@@ -33,11 +33,12 @@ function dom() {
       if (isHit) {
         square.setAttribute("display", "hit");
       } else {
-        if (player == game.p1) {
-          square.setAttribute("display", "ship");
-        } else {
-          square.setAttribute("display", "sea");
-        }
+        square.setAttribute("display", "ship");
+        // if (player == game.p1) {
+        //   square.setAttribute("display", "ship");
+        // } else {
+        //   square.setAttribute("display", "sea");
+        // }
       }
     }
   };

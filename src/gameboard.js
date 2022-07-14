@@ -8,6 +8,11 @@ function gameboard(size) {
   //Places going to the right
   const place_horiz = function (coords, ship) {
     //No room horizontally
+    let [y,x] = coords;
+    if(y < 0 || x < 0 || y > size || x > size){
+      return false;
+    }
+
     if (size - coords[1] < ship.length) {
       return false;
     }
@@ -56,7 +61,7 @@ function gameboard(size) {
     } else {
       //The target is a ship
       let [ship, ind] = target;
-      if (ship.isSunk()) {
+      if (ship.hitMap[ind]) {
         return false;
       } else {
         ship.hit(ind);

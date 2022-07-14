@@ -11,7 +11,34 @@ export const game = (() => {
   let onesTurn = true;
   let gameDone = false;
 
-  default_ships(p1.board, p2.board);
+  
+
+  function prompt_place_ship(length){
+    while(true){
+      let answer = prompt(`Where would you like to place your ship of length ${length}? Format is "row, column", eg. "3,2"`);
+  
+      let coords = answer.split(',').map(entry => parseInt(entry));
+      const toPlace = ship(length);
+      if(p1.board.place_horiz(coords, toPlace)){
+        break;
+      }else{
+        alert('Those are not valid coordinates');
+      }
+    }
+    game.display_manager.display_board(game.p1);
+    game.display_manager.display_board(game.p2);
+  }
+
+  function place_ship_random(length){
+    const toPlace = ship(length);
+    while(true){
+      let rand1 = Math.floor(Math.random() * p2.board.size);
+      let rand2 = Math.floor(Math.random() * p2.board.size);
+      if(p2.board.place_horiz([rand1,rand2], toPlace)){
+        break;
+      }
+    }
+  }
 
   function receiveAttack(coords, player) {
     if (gameDone) {
@@ -63,6 +90,15 @@ export const game = (() => {
         receiveAttack(coords, player);
         return coords;
       }
+    }function place_ship_random(length){
+      const toPlace = ship(length);
+      while(true){
+        let rand1 = Math.floor(Math.random() * board.size);
+        let rand2 = Math.floor(Math.random() * board.size);
+        if(game.p2.board.place_horiz([rand1,rand2], toPlace)){
+          break;
+        }
+      }
     }
     //Go through linearly
     for (let i = 0; i < board.size; i++) {
@@ -86,27 +122,57 @@ export const game = (() => {
     display_manager,
     receiveAttack,
     ai_attack,
+    prompt_place_ship,
+    place_ship_random,
   };
 })();
 
-const container = document.querySelector(".gamecontainer");
-container.appendChild(game.display_manager.create_board(game.p1));
-container.appendChild(game.display_manager.create_board(game.p2));
 
-game.display_manager.display_board(game.p1);
-game.display_manager.display_board(game.p2);
+function initialize_game(){
+  const container = document.querySelector(".gamecontainer");
+  container.appendChild(game.display_manager.create_board(game.p1));
+  container.appendChild(game.display_manager.create_board(game.p2));
+
+  game.display_manager.display_board(game.p1);
+  game.display_manager.display_board(game.p2);
+ 
+
+  place_ships_random();
+  place_ships();
+
+  game.display_manager.display_board(game.p1);
+  game.display_manager.display_board(game.p2);
+}
+
+function place_ships(){
+  game.prompt_place_ship(3);
+  game.prompt_place_ship(4);
+  game.prompt_place_ship(2);
+  game.prompt_place_ship(2);
+}
+
+function place_ships_random(){
+  game.place_ship_random(3);
+  game.place_ship_random(4);
+  game.place_ship_random(2);
+  game.place_ship_random(2);
+
+}
 
 //Just a random ship layout to have by default
-function default_ships(b1, b2) {
-  const b1s1 = ship(2);
-  const b1s2 = ship(3);
+function default_ships(b) {
 
-  const b2s1 = ship(2);
-  const b2s2 = ship(3);
 
-  b1.place_horiz([0, 0], b1s1);
-  b1.place_vert([0, 4], b1s2);
+  const b1 = ship(2);
+  const b2 = ship(3);
 
-  b2.place_horiz([0, 0], b2s1);
-  b2.place_vert([1, 4], b2s2);
+  b.place_horiz([0, 0], b1);
+  b.place_vert([0, 4], b2);
+
+  game.display_manager.display_board(game.p1);
+  game.display_manager.display_board(game.p2);
 }
+
+initialize_game();
+
+
