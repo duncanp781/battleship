@@ -9,6 +9,23 @@
 </head>
 <body>
   <div class="turn">Your turn</div>
+  <form>
+    <div>
+      <span id = 'coords'>Enter the coordinates of your ship: </span>
+      <label for="row"> Row: 
+      <input type="number" name="row" id="row">
+    </label>
+    <label for="col">
+      Column:
+      <input type="number" name="col" id="col">
+    </label>
+    </div>
+    <label for="hor">Horizontal</label>
+    <input type="radio" name="dir" id="hor" checked>
+    <label for="ver">Vertical</label>
+    <input type="radio" name="dir" id="ver">
+    <button>Submit</button>
+  </form>
   <div class="gamecontainer"></div>
   
   
