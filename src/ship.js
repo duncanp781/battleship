@@ -7,6 +7,7 @@ function ship(length){
     return this;
   }
 
+
   const isSunk = function(){
     return !!hitMap.reduce((bool, ind) => ind && bool, true);
   }
