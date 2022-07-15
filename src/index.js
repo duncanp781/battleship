@@ -8,24 +8,22 @@ export const game = (() => {
   const p1 = player("A", 8);
   const p2 = player("B", 8);
   const display_manager = dom();
+  const placement_order = [3, 4, 2, 2];
+  let gameBegun = false;
+  let toPlace = 0;
   let onesTurn = true;
   let gameDone = false;
 
-  function prompt_place_ship(length) {
-    while (true) {
-      let answer = prompt(
-        `Where would you like to place your ship of length ${length}? Format is "row, column", eg. "3,2"`
-      );
-
-      let coords = answer.split(",").map((entry) => parseInt(entry));
-      const toPlace = ship(length);
-      if (p1.board.place_horiz(coords, toPlace)) {
-        break;
-      } else {
-        alert("Those are not valid coordinates");
-      }
+  function placement_manager() {
+    console.log('toPlace: ' + this.toPlace);
+    if ((this.toPlace >= placement_order.length)) {
+      console.log('beginning game!');
+      const form = document.querySelector('form');
+      form.className = 'over';
+      this.gameBegun = true;
+      return;
     }
-    display_manager.display_board(p1);
+    display_manager.placement_form();
   }
 
   function place_ship_random(length) {
@@ -42,7 +40,7 @@ export const game = (() => {
 
   function do_player_turn(coords) {
     if (receiveAttack(coords, p2)) {
-      //The player attacked, display it
+      //The player attacked, display it    }
       display_manager.display_square(coords, p2);
       //Now do the AI's turn
       let next = ai_attack(p1);
@@ -64,7 +62,7 @@ export const game = (() => {
       onesTurn = !onesTurn;
       if (player.board.allSunk()) {
         const turn = document.querySelector(".turn");
-        turn.textContent = (player == p1) ? "You lose!" : "You win!";
+        turn.textContent = player == p1 ? "You lose!" : "You win!";
         gameDone = true;
       }
       return true;
@@ -105,9 +103,12 @@ export const game = (() => {
     display_manager,
     receiveAttack,
     ai_attack,
-    prompt_place_ship,
     place_ship_random,
     do_player_turn,
+    gameBegun,
+    toPlace,
+    placement_manager,
+    placement_order,
   };
 })();
 
@@ -119,14 +120,14 @@ function initialize_game() {
   game.display_manager.display_board(game.p1);
   game.display_manager.display_board(game.p2);
 
-  place_ships(game.prompt_place_ship);
+  game.placement_manager();
+
   place_ships(game.place_ship_random);
 
   function place_ships(place_method) {
-    place_method(3);
-    // place_method(4);
-    // place_method(2);
-    // place_method(2);
+    for (let len of game.placement_order){
+      place_method(len);
+    }
   }
 
   game.display_manager.display_board(game.p1);

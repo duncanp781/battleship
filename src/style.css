@@ -22,6 +22,10 @@
   justify-content: center;
 }
 
+form.over{
+  display: none;
+}
+
 .square[display = 'sea']{
   background-color: blue;
 }
